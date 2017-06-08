@@ -33,13 +33,14 @@ classdef load_aimsun_detector_data
             fileID = fopen(fullfile(location,file));
 
             % Get the simulation date and time
+           
             tmp=strsplit(file,'.');
             tmp=strsplit(tmp{1},'_');
             SimulationTime=tmp{2};
             InputFormat='yyyy-MM-dd HHmmss';
             SimulationTimeDouble=datenum(datetime(SimulationTime,'InputFormat',InputFormat));
             
-            % Start to reac the data
+            % Start to read the data
             data=[];
             tline=fgetl(fileID); % Ignore the first line
             tline=fgetl(fileID); % Starting from the second line
@@ -55,7 +56,7 @@ classdef load_aimsun_detector_data
                 Time=tmp{3};
                 Volume=tmp{4};
                 Occupancy=tmp{5};
-
+                
                 tmpData=load_aimsun_detector_data.dataFormat...
                     (DetectorID,DetectorExternalID,SimulationTime,SimulationTimeDouble,Time,Volume,Occupancy);
                 data=[data;tmpData];
@@ -73,12 +74,10 @@ classdef load_aimsun_detector_data
             
             for i=1:numDetector
                 idx=ismember([data.DetectorExternalID]',uniqueDetectorID(i));
-                
-                % Get the file name
                 fileName=fullfile(this.outputFolderLocation,sprintf('simDetector_%d.mat',uniqueDetectorID(i)));
-                
+               
                 if(exist(fileName,'file')) % If the file exists
-                    load(fileName);    
+                    load(fileName);
                     detectorDataAll=[detectorDataAll;data(idx,:)]; 
                     simDateTime=strcat({detectorDataAll.SimulationTime}',num2str([detectorDataAll.Time]'));
                     [~,I]=unique(simDateTime);
@@ -121,6 +120,7 @@ classdef load_aimsun_detector_data
                      'Occupancy',            Occupancy);
              end
          end
-     end
-end
+         
+     end % methods
+end % classdef
 
