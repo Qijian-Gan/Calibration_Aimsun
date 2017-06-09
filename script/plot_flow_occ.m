@@ -8,98 +8,52 @@ dataFiles = dir(findCalibrationFolder.temp());
 
 % Load all available data into workspace
 data = [];
-for i = 3:length(dataFiles) % First two files are '.' and '..'?
+for i = 3:size(dataFiles,1) % First two files are '.' and '..'?
    filename = dataFiles(i).name;
    data = [data; load(filename)];  
 end
 
-simNames ={};
-simData = {};
-for i = 1:length(fileList)
+for i = 1:size(fileList,1) % Loop through each simulation
    name = erase(erase(fileList(i).name,'DetectorData_'),'.csv');
-   simNames = [simNames name]; 
-   % Slow way: use following initialization
-  % simData(i,:) = {name, struct('DetectorID',[],'DetectorExternalID',[],...
-    %'SimulationTime',[],'SimulationTimeDouble',[],'Time',[],'Volume',[],...
-    %'Occupancy',[])};
-    
-   for j = 1:size(data,1)
-       % Sort detector data into corresponding simulations
-      idx = ismember({data(j).detectorDataAll.SimulationTime}', {name});
-      selectedData = data(j).detectorDataAll(idx,:); 
-      % Add selectedData to struct containing info for that simulation
-      simData(i,:) = {name, selectedData};
-      %simData(i,2) = [simData(i,2) selectedData];
-
-
-   end
+   flow = [];
+   occ = [];
+   time = [];
+    for j = 1:size(data,1)
+        % For each detector: compare simulation time to desired simulation
+       idx = ismember({data(j).detectorDataAll.SimulationTime}', {name});
+       selectedData = {data(j).detectorDataAll(idx,:)};
+       flow = [flow {selectedData{1}.Volume}];
+       occ = [occ {selectedData{1}.Occupancy}];
+       time = [time {selectedData{1}.Time}];
+       plot_and_save(flow,occ,time,name);
+    end
 end
 
 
 
-%% Separate data by simulation, plot flow/occ, occ/time, flow/time graphs
+%% Plot flow/occ, occ/time, flow/time graphs and save figures
 
-
-
+function plot_and_save(flow,occ,time,name)
+    % Create 2x1 subplot of:
+        % flow vs. occ
+        % flow vs. time, occ vs. time on double y-axis
     
-    %plot_and_save(___);
- 
-    % -Plot flow/occ, flow/time, occ/time (last two on same plot: use yyaxis
-    %   function) for each detector
-    % -Save each detector plot as .fig and .png
-    % -Combine detector plots into one subplot, maybe organize by advanced
-    %   and stopbar detectors
+    % Flow vs. occupancy
+    subplot(2,1)
+    set(gca,'FontSize',11);
+    xlabel('Occupancy');
+    ylabel('Flow');
+    scatter(
+    
 
 
-%% Plot Flow vs Occ
+end
 
-% available_colors = linspace(1,10,6);
-% colors = [];
-% 
-%%% To do: clean up colors assignments, get rid of idInf %%%
-% for i = 1:length(flow)
-%    time = idInf(i,1);
-%    if time < 21600
-%        colors(i) = available_colors(1);
-%    elseif time < 32400
-%        colors(i) = available_colors(6);
-%    elseif time < 55800
-%        colors(i) = available_colors(1);
-%    elseif time < 68400
-%        colors(i) = available_colors(6);
-%    elseif time < 75600
-%        colors(i) = available_colors(1);
-%    else
-%        colors(i) = available_colors(1);
-%    end
-% end
-% 
-% figure(1)
-% 
-% subplot(2,2,1)
-% set(gca,'FontSize',11);
-% xlabel('Occupancy');
-% ylabel('Flow');
-% %scatter(flow, occupancy, [], color);
-% scatter(occupancy, flow,[], colors);
-% title('Flow vs Occupancy');
-% 
-% 
-% 
-% 
-% subplot(2,2,2)
-% set(gca,'FontSize',11);
-% xlabel('Time');
-% ylabel('Flow');
-% scatter(Timesec, flow,[], colors);
-% title('Flow vs Time');
-% 
-% subplot(2,2,3)
-% set(gca,'FontSize',11);
-% xlabel('Time');
-% ylabel('Occupancy');
-% scatter(Timesec, occupancy, [], colors);
-% title('Occupancy vs Time');
+
+%% Save figure
+
+
+
 
 
 
