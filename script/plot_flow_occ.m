@@ -1,6 +1,6 @@
 %% Plot flow vs. occupany for different demand profiles 
 %close all
-
+tic
 %% Extract data from previously ran simulations
 
 read_or_update_simDetectorData; 
@@ -14,43 +14,29 @@ for i = 3:size(dataFiles,1) % First two files are '.' and '..'?
 end
 
 for i = 1:size(fileList,1) % Loop through each simulation
-   name = erase(erase(fileList(i).name,'DetectorData_'),'.csv');
-   flow = [];
-   occ = [];
-   time = [];
-    for j = 1:size(data,1)
-        % For each detector: compare simulation time to desired simulation
-       idx = ismember({data(j).detectorDataAll.SimulationTime}', {name});
+   simName = erase(erase(fileList(i).name,'DetectorData_'),'.csv');
+
+   
+   for j = 1:size(data,1)
+       % For each detector: compare simulation time to desired simulation
+       temp_array = cell2mat({data(j).detectorDataAll.DetectorExternalID});
+       detectorName = num2str(temp_array(1));
+       idx = ismember({data(j).detectorDataAll.SimulationTime}', {simName});
        selectedData = {data(j).detectorDataAll(idx,:)};
-       flow = [flow {selectedData{1}.Volume}];
-       occ = [occ {selectedData{1}.Occupancy}];
-       time = [time {selectedData{1}.Time}];
-       plot_and_save(flow,occ,time,name);
-    end
+
+       if ~isempty(selectedData{1})
+           flow = cell2mat({selectedData{1}.Volume});
+           occ = cell2mat({selectedData{1}.Occupancy});
+           time = cell2mat({selectedData{1}.Time});
+        if j == 1
+           plot_and_save(flow,occ,time,simName,detectorName);
+        end      
+
+       end
+   end
 end
 
-
-
-%% Plot flow/occ, occ/time, flow/time graphs and save figures
-
-function plot_and_save(flow,occ,time,name)
-    % Create 2x1 subplot of:
-        % flow vs. occ
-        % flow vs. time, occ vs. time on double y-axis
-    
-    % Flow vs. occupancy
-    subplot(2,1)
-    set(gca,'FontSize',11);
-    xlabel('Occupancy');
-    ylabel('Flow');
-    scatter(
-    
-
-
-end
-
-
-%% Save figure
+toc
 
 
 
