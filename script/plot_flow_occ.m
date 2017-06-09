@@ -1,30 +1,54 @@
 %% Plot flow vs. occupany for different demand profiles 
 %close all
 
-%% Extract flow vs. occupancy for all simulations at given intersection
+%% Extract data from previously ran simulations
 
-% Extract data
-read_or_update_simDetectorData;
+read_or_update_simDetectorData; 
+dataFiles = dir(findCalibrationFolder.temp());
 
-numSimulations = length(dp.fileList);
-for i = 1:numSimulations
-    % -Read SimulationTime to separate out unique simluations
-    % -Vectorize data fields across time steps (use horzcat as below)
+% Load all available data into workspace
+data = [];
+for i = 3:length(dataFiles) % First two files are '.' and '..'?
+   filename = dataFiles(i).name;
+   data = [data; load(filename)];  
+end
+
+simNames ={};
+simData = {};
+for i = 1:length(fileList)
+   name = erase(erase(fileList(i).name,'DetectorData_'),'.csv');
+   simNames = [simNames name]; 
+   % Slow way: use following initialization
+  % simData(i,:) = {name, struct('DetectorID',[],'DetectorExternalID',[],...
+    %'SimulationTime',[],'SimulationTimeDouble',[],'Time',[],'Volume',[],...
+    %'Occupancy',[])};
+    
+   for j = 1:size(data,1)
+       % Sort detector data into corresponding simulations
+      idx = ismember({data(j).detectorDataAll.SimulationTime}', {name});
+      selectedData = data(j).detectorDataAll(idx,:); 
+      % Add selectedData to struct containing info for that simulation
+      simData(i,:) = {name, selectedData};
+      %simData(i,2) = [simData(i,2) selectedData];
+
+
+   end
+end
+
+
+
+%% Separate data by simulation, plot flow/occ, occ/time, flow/time graphs
+
+
+
+    
+    %plot_and_save(___);
+ 
     % -Plot flow/occ, flow/time, occ/time (last two on same plot: use yyaxis
     %   function) for each detector
     % -Save each detector plot as .fig and .png
     % -Combine detector plots into one subplot, maybe organize by advanced
     %   and stopbar detectors
-    % 
-    
-    % Merge data fields into one vector
-    ExternalIDs = horzcat(data.DetectorExternalID); % Do this for other fields too
-    
-    
-end
-
-
-
 
 
 %% Plot Flow vs Occ
@@ -76,6 +100,8 @@ end
 % ylabel('Occupancy');
 % scatter(Timesec, occupancy, [], colors);
 % title('Occupancy vs Time');
+
+
 
 
 
