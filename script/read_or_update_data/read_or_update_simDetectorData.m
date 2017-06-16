@@ -9,7 +9,7 @@ folderLocation=findCalibrationFolder.objects;
 
 fileName=fullfile(folderLocation,'simDetector_file_have_been_read_Aimsun.mat');
 folderLocation=findCalibrationFolder.simDetectorData();
-outputFolderLocation=findCalibrationFolder.temp();
+outputFolderLocation=findCalibrationFolder.temp_detectors();
 
 if(exist(fileName,'file'))
     % If found
@@ -42,6 +42,3 @@ end
 % Save the files that have been read
 fileRead=[fileRead;tmpList];
 save(fileName,'fileRead');
-
-
-

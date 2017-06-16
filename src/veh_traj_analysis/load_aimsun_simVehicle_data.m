@@ -17,7 +17,7 @@ classdef load_aimsun_simVehicle_data
             else
                 % Default folder location
                 this.folderLocation=findCalibrationFolder.simVehTrajectory;
-                this.outputFolderLocation=findCalibrationFolder.temp;
+                this.outputFolderLocation=findCalibrationFolder.temp_vehicles;
             end   
             
             tmp=dir(this.folderLocation);
@@ -46,7 +46,7 @@ classdef load_aimsun_simVehicle_data
             % Remove wrong vehicles
             idx=ismember(tmp_data(:,2),wrong_veh);
             data=tmp_data(~idx,:);
-            
+
             data=[data,SimulationTime*ones(size(data,1),1)];
 
         end

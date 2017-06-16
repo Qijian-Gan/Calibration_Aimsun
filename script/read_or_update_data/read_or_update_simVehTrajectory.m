@@ -9,7 +9,7 @@ folderLocation=findCalibrationFolder.objects;
 
 fileName=fullfile(folderLocation,'simVehTraj_file_have_been_read_Aimsun.mat');
 folderLocation=findCalibrationFolder.simVehTrajectory();
-outputFolderLocation=findCalibrationFolder.temp();
+outputFolderLocation=findCalibrationFolder.temp_vehicles();
 
 if(exist(fileName,'file'))
     % If found
@@ -28,7 +28,7 @@ numFile=size(fileList,1);
 tmpList=[];
 data=[];
 for i=1:numFile
-    i
+    fprintf('File number: %d\n', i);
     if(isempty(fileRead) || ~any(strcmp({fileList(i).name},fileRead))) % Empty or Not yet read
         % Parse data
         tmp_data=dp.parse_csv(fileList(i).name,dp.folderLocation);

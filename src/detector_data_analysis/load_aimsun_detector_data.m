@@ -17,7 +17,7 @@ classdef load_aimsun_detector_data
             else
                 % Default folder location
                 this.folderLocation=findCalibrationFolder.simDetectorData;
-                this.outputFolderLocation=findCalibrationFolder.temp;
+                this.outputFolderLocation=findCalibrationFolder.temp_detectors;
             end            
             
             % Get the list of files

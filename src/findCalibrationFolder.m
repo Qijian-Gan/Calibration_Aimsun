@@ -31,8 +31,12 @@ classdef findCalibrationFolder
             x = fullfile(findCalibrationFolder.root,'config');
         end
                 
-        function [x] = temp()
-            x = fullfile(findCalibrationFolder.root,'temp');
+        function [x] = temp_detectors()
+            x = fullfile(findCalibrationFolder.root,'temp_detectors');
+        end
+        
+        function [x] = temp_vehicles()
+            x = fullfile(findCalibrationFolder.root,'temp_vehicles');
         end
                 
         function [x] = objects()

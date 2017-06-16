@@ -4,7 +4,7 @@ tic
 %% Extract data from previously ran simulations
 
 read_or_update_simDetectorData; 
-dataFiles = dir(findCalibrationFolder.temp());
+dataFiles = dir(findCalibrationFolder.temp_detectors());
 
 % Load all available data into workspace
 data = [];
@@ -36,16 +36,3 @@ for i = 1:size(fileList,1) % Loop through each simulation
    end
 end
 toc
-
-
-
-
-
-
-
-
-
-
-
-
-
