@@ -14,10 +14,17 @@ end
 
 simulationFiles = {fileList.name};
 tmp_names = arrayfun(@(x) erase(x,'VehicleInf_'),simulationFiles);
-indices = cell2mat(arrayfun(@(x) strfind(x,'_'),tmp_names))-1;
-simNames = arrayfun(
+strEndIndex = cell2mat(strfind(tmp_names(1),'_'))-1;
+simNames = unique(cellfun(@(x) x(1:strEndIndex), tmp_names, 'UniformOutput', false));
+% simNames contains unique names of simulations; e.g. '2017-06-14 151754'
 
-% for i = 1:size(fileList,1) % Loop through each file
-%    simName = erase(erase(fileList(i).name,'DetectorData_'),'.csv');
-%    
-% end
+for i = 1:length(simNames) % for each simulation
+    
+    for j = 1:size(data,1) % for each section
+        vehID = data(j).vehSectionAll(:,2); 
+        [temp, indices] = sort(vehID(:,2)); 
+        dataSort_vehID = vehID(indices,:);  % Sort data by vehID
+        
+        % OR use findgroups(vehID(:,2)), and then splitapply
+        
+end
